@@ -1,6 +1,6 @@
 #include<stdio.h>
 /**
- * Function adds to vectors a and b
+ * This program adds to vectors a and b
  * and returns c as an array using parameter.
  * http://codeforwin.org/2017/12/pass-return-array-function-c.html
  */ 
