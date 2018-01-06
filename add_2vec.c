@@ -2,7 +2,7 @@
 /**
  * Function adds to vectors a and b
  * and returns c as an array using parameter.
- * http://codeforwin.org/2017/12/pass-return-array-function-c.html#pass-array-1d
+ * http://codeforwin.org/2017/12/pass-return-array-function-c.html
  */ 
 
 // define globals
