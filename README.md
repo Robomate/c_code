@@ -8,6 +8,10 @@ execute with:
 
 ./add_2vec
 
+or all at once: 
+
+gcc -o add_2vec add_2vec.c && ./add_2vec
+
 ### Atlas(Blas)
 
 link against libcblas library
