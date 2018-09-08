@@ -12,6 +12,10 @@ or all at once:
 
 gcc -o add_2vec add_2vec.c && ./add_2vec
 
+### C Bootcamp
+
+https://www.gribblelab.org/CBootCamp/
+
 ### Atlas(Blas)
 
 link against libcblas library
