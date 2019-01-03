@@ -7,24 +7,29 @@
  * RL Algos: Q_Learning
  * 2D Gridworld Example
  * Epsilon-Greedy Action
- * Exec: gcc -o test q_07.c && ./test
+ * Exec: gcc -o qtest qlearning_desktop.c && ./qtest
+ * 
+ * Q-learning algorithm:
+ * (1) Init Tables              __
+ * (2) Choose an Action           | Loop for 
+ * (3) Find Qmax of Next State    | good Q-Table
+ * (4) Do Bellman Update        __|
  */ 
 
 // init globals
-#define ITERATIONS 1// max number of iterations
-#define ROWS 5 // number of rows
-#define COLS 5 // number of columns
+#define ITERATIONS 10 // max number of iterations
+#define ROWS 5 // grid size, number of rows
+#define COLS 5 // grid size, number of columns
 #define STRING_LEN 10 // string length for printing
 #define MAX_ACTIONS 4 // max number of next actions
 #define DIM_STATES 2 // number of state dimensions
 
-const double trans[3] = {0.1,0.8,0.1}; // transistion probs for fixed policy
 const char *actions[] = {"up", "right", "down", "left"}; // actions
-static double gamma = 0.9; // discount factor
-static double alpha = 0.9; // learning factor
-static double epsilon = 0.9; // epsilon-greedy factor
-const double eps_decay = 0.99; // eps decay factor (high for big envs)
-const double eps_minimum = 0.1; // epsilon-greedy minimum
+static double gamma = 0.85; // discount factor, e.g. 0.9, set low for reward only
+static double alpha = 0.99; // learning factor, e.g. 0.85, set high for exploration
+static double epsilon = 0.99; // epsilon-greedy factor (linear decay)
+const double eps_decay = 0.99; // eps decay factor (set high for big envs)
+const double eps_minimum = 0.1; // minimum epsilon random action, e.g. 0.1
 
 double R[ROWS][COLS]; // reward table
 double Q[ROWS][COLS]; // q table
@@ -98,13 +103,12 @@ int fill_Qvec(double vec[], State states[MAX_ACTIONS]){
 
 void print_mat_double(double array[][COLS]){
     /* prints out a double matrix as strings */
-    int i,j,k, char_len;
-    char_len = 10;
-    char output[char_len];
+    int i,j;
+    char output[STRING_LEN];
     for(i=0; i < ROWS; i++){
         for(j=0; j<COLS; ++j){
             //printf("  %3.2lf", array[i][j]);
-            snprintf(output, char_len, "%3.2lf", array[i][j]);
+            snprintf(output, STRING_LEN, "%3.2lf", array[i][j]);
             printf("%8s ", output);
             memset(&output[0], 0, sizeof(output));
         }
@@ -197,20 +201,19 @@ int next_actions(State current_state, State next_states[MAX_ACTIONS], StateActio
     return 0;
 }
 
-MaxTuple find_max_vec(double array[]){
+int find_max_vec(double array[], MaxTuple *max ){
     /* find maximum value and index in matrix */
-    MaxTuple max; // struct instance
-    max.max_val = array[0];
-    max.max_idx = 0;
+    max->max_val = array[0];
+    max->max_idx = 0;
 
     for(int r = 0; r < MAX_ACTIONS; r++){
-        if (array[r] > max.max_val){
-            max.max_val = array[r];
-            max.max_idx = r;
+        if (array[r] > max->max_val){
+            max->max_val = array[r];
+            max->max_idx = r;
         }
     }
-    printf("\nMax: %3.2lf, Idx: %d\n",max.max_val,max.max_idx);
-    return max; // return struct directly
+    printf("\nMax: %3.2lf, Idx: %d\n",max->max_val,max->max_idx);
+    return 0; 
 }
 
 // init main
@@ -268,7 +271,7 @@ int main(int argc, char** argv){
     srand((unsigned) time(&t)); // init random number generator
     
     // init tables
-    printf("\n==== Init tables ====\n");
+    printf("\n==== Init Tables ====\n");
     fill_mat_const(Q, init_q); // init Q-table with zeros
     printf("\nQ-table\n");
     print_mat_double(Q);
@@ -298,9 +301,9 @@ int main(int argc, char** argv){
         printf("(%d,%d)\n",current_state.r,current_state.c);  
 
         // epsilon-greedy strategy with expontial decay
-        printf("\n=== Select Action ===\n");
+        printf("\n=== Choose an Action ===\n");
         eps_array[1] = epsilon * eps_decay;
-        eps_max = find_max_vec(eps_array); // find max of epsilon
+        find_max_vec(eps_array, &eps_max); // find max of epsilon
         epsilon = eps_max.max_val;
         rand_uni = rand_double();
         printf("\nEpsilon: %3.2lf\n",epsilon);
@@ -314,7 +317,7 @@ int main(int argc, char** argv){
             // case: greedy action 
             fill_Qvec(Q_max_array, next_states); // find Q-Values
             print_vec(Q_max_array);
-            max = find_max_vec(Q_max_array); // find max of Q-Values
+            find_max_vec(Q_max_array, &max); // find max of Q-Values
             action = max.max_idx; 
             printf("\nGreedy Action: %s, (%d)\n", actions[action], action);    
         }
@@ -327,12 +330,12 @@ int main(int argc, char** argv){
         printf("\nAction-table\n");
         print_mat_string(P);
 
-        // find Q_max of next states 
-        printf("\n=== Find Qmax ===\n");
+        // find Q_max of next state
+        printf("\n=== Find Qmax of Next State ===\n");
         next_actions(next_state, next_states, state_actions);
         fill_Qvec(Q_max_array, next_states); // find Q-Values
         print_vec(Q_max_array);
-        max = find_max_vec(Q_max_array); // find max of Q-Values
+        find_max_vec(Q_max_array, &max); // find max of Q-Values
         
         // assign values
         Q_max = max.max_val; 
@@ -342,19 +345,19 @@ int main(int argc, char** argv){
         // do Bellman Update
         Q_new = Q_current + alpha * (R_current + gamma * Q_max - Q_current);
         Q[current_state.r][current_state.c] = Q_new; // Update Q-table
-
+        printf("\n=== Do Bellman Update ===\n");
+        printf("\nQ-Old: %3.2lf\n",Q_current);
+        printf("Q-Update: %3.2lf\n",Q_new);
         // set next state to current state
         current_state = next_state;
 
-        printf("\n=== Iteration (%d|%d) ===\n",iter,ITERATIONS);
-        printf("\nQ-table\n");
+        printf("\nUpdated Q-table\n");
         print_mat_double(Q);
     }
-    // Print out final results:
-    printf("\n\n=====================\n");
-    printf("=== Final Results ===");
-    printf("\n=====================\n");
-    printf("\nTotal Iterations: %d\n",ITERATIONS);
+    // Print out final results
+    printf("\n\n=========================================\n");
+    printf("  Final Results at Iteration (%d|%d) ",iter-1,ITERATIONS);
+    printf("\n=========================================\n");
     printf("\nAction-table\n");
     print_mat_string(P);
     printf("Q-table\n");
