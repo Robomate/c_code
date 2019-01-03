@@ -11,7 +11,7 @@
  */ 
 
 // init globals
-#define ITERATIONS 1000 // max number of iterations
+#define ITERATIONS 1// max number of iterations
 #define ROWS 5 // number of rows
 #define COLS 5 // number of columns
 #define STRING_LEN 10 // string length for printing
@@ -19,7 +19,7 @@
 #define DIM_STATES 2 // number of state dimensions
 
 const double trans[3] = {0.1,0.8,0.1}; // transistion probs for fixed policy
-const char *actions[] = {"up   ", "right", "down ", "left "}; // actions
+const char *actions[] = {"up", "right", "down", "left"}; // actions
 static double gamma = 0.9; // discount factor
 static double alpha = 0.9; // learning factor
 static double epsilon = 0.9; // epsilon-greedy factor
@@ -97,11 +97,16 @@ int fill_Qvec(double vec[], State states[MAX_ACTIONS]){
 }
 
 void print_mat_double(double array[][COLS]){
-    /* prints out a double matrix */
-    int i,j;
+    /* prints out a double matrix as strings */
+    int i,j,k, char_len;
+    char_len = 10;
+    char output[char_len];
     for(i=0; i < ROWS; i++){
         for(j=0; j<COLS; ++j){
-            printf("  %3.2lf", array[i][j]);
+            //printf("  %3.2lf", array[i][j]);
+            snprintf(output, char_len, "%3.2lf", array[i][j]);
+            printf("%8s ", output);
+            memset(&output[0], 0, sizeof(output));
         }
         printf("\n");   
     }
@@ -113,7 +118,7 @@ void print_mat_string(char array[][COLS][STRING_LEN]){
     int i,j;
     for(i=0; i < ROWS; i++){
         for(j=0; j<COLS; ++j){
-            printf(" %s", array[i][j]);
+            printf("%8s ", array[i][j]);
         }
         printf("\n");   
     }
@@ -261,9 +266,8 @@ int main(int argc, char** argv){
     double rand_uni; // uniform random number
     time_t t; // for pseudo random number
     srand((unsigned) time(&t)); // init random number generator
-    ///////////////////
+    
     // init tables
-    ///////////////////
     printf("\n==== Init tables ====\n");
     fill_mat_const(Q, init_q); // init Q-table with zeros
     printf("\nQ-table\n");
@@ -291,11 +295,10 @@ int main(int argc, char** argv){
         printf("    Start with Iteration (%d|%d) ",iter,ITERATIONS);
         printf("\n==================================\n");
         printf("\nCurrent State in Q: ");
-        printf("(%d,%d)\n",current_state.r,current_state.c);        
+        printf("(%d,%d)\n",current_state.r,current_state.c);  
+
         // epsilon-greedy strategy with expontial decay
         printf("\n=== Select Action ===\n");
-
-
         eps_array[1] = epsilon * eps_decay;
         eps_max = find_max_vec(eps_array); // find max of epsilon
         epsilon = eps_max.max_val;
@@ -356,12 +359,6 @@ int main(int argc, char** argv){
     print_mat_string(P);
     printf("Q-table\n");
     print_mat_double(Q);
-
-
-    // convert double to string
-
-
-
-
+    
     return 0;
 }
