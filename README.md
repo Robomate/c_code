@@ -2,15 +2,16 @@
 
 compile with:
 
-gcc -o add_2vec add_2vec.c
+gcc -o test add_2vec.c
 
 execute with:
 
-./add_2vec
+./test
 
 or all at once: 
 
-gcc -o add_2vec add_2vec.c && ./add_2vec
+Linux: gcc -o test add_2vec.c && ./test
+Win: gcc -o test helloworld.c; ./test
 
 ### C Bootcamp
 
