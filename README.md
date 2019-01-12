@@ -11,6 +11,7 @@ execute with:
 or all at once: 
 
 Linux: gcc -o test add_2vec.c && ./test
+
 Win: gcc -o test helloworld.c; ./test
 
 ### C Bootcamp
