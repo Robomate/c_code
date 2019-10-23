@@ -28,7 +28,7 @@ int trafficlight_timer(Trafficlight *tlight) {
     printf("Red: %d\n",tlight->red);
     printf("Yellow: %d\n",tlight->yellow);
     printf("Green: %d\n",tlight->green);
-    // do timeer 
+    // do timer 
     do {
         clock_t difference = clock() - before;
         msec = difference * 1000 / CLOCKS_PER_SEC;
@@ -40,8 +40,6 @@ int trafficlight_timer(Trafficlight *tlight) {
 
     return 0;
 }
-
-
 
 int main(){
     Trafficlight tlight; // create instance of struct
