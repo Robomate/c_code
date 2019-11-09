@@ -12,6 +12,7 @@
 #define IDC_REMOVE                      1005
 #define IDC_SHOWCOUNT                   1006
 
+
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
