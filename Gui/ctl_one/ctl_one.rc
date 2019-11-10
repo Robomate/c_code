@@ -56,25 +56,25 @@ END
 // Dialog
 //
 
-IDD_MAIN DIALOG DISCARDABLE  0, 0, 900, 500
+IDD_MAIN DIALOG DISCARDABLE  0, 0, 900, 330
 STYLE DS_MODALFRAME | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
-CAPTION "DFT - WMS Client Simulation"
+CAPTION "DFT - WCS Client Simulation"
 FONT 8, "MS Sans Serif"
 BEGIN
-    LTEXT           "Database for WCS -> PLC Telegrams",IDC_STATIC,7,15,300,8     //x,y, width, heigth
-    LTEXT           "Add",IDC_STATIC,7,30,14,8    // "Add WCS Telegrams",IDC_STATIC,7,10,14,8
-    EDITTEXT        IDC_TEXT,25,27,770,14,ES_AUTOHSCROLL
-    EDITTEXT        IDC_NUMBER,800,27,21,14,ES_NUMBER
-    LTEXT           "times.",IDC_STATIC,827,30,23,8
-    LISTBOX         IDC_LIST,7,45,788,106,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
-    PUSHBUTTON      "&Add",IDC_ADD,800,50,70,14                         //x,y, width, heigth
-    PUSHBUTTON      "&Remove",IDC_REMOVE,800,67,70,14
-    PUSHBUTTON      "&Clear",IDC_CLEAR,800,83,70,14         //  450,63,50,14
-    PUSHBUTTON      "&Send Telegram",IDC_CLEAR,800,110,70,14         //  450,63,50,14
-    LTEXT           "Sent Telegrams WCS -> PLC",IDC_STATIC,7,160,300,8     //x,y, width, heigth
-    LISTBOX         IDC_LIST,7,170,788,20,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
-    LTEXT           "Received Telegrams PLC -> WCS",IDC_STATIC,7,210,300,8     //x,y, width, heigth
-    LISTBOX         IDC_LIST,7,220,788,20,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Database for WCS -> PLC Telegrams",IDC_STATIC,84,15,300,8     //x,y, width, heigth
+    //LTEXT           "Add",IDC_STATIC,7,30,14,8    // "Add WCS Telegrams",IDC_STATIC,7,10,14,8
+    EDITTEXT        IDC_TEXT,84,27,780,14,ES_AUTOHSCROLL
+    //EDITTEXT        IDC_NUMBER,870,27,21,14,ES_NUMBER  // can be useful for Port number, ip address ...
+    //LTEXT           "times.",IDC_STATIC,834,30,23,8
+    LISTBOX         IDC_LIST,84,45,780,90,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "&Add",IDC_ADD,7,50,70,14                         //x,y, width, heigth
+    PUSHBUTTON      "&Remove",IDC_REMOVE,7,67,70,14
+    PUSHBUTTON      "&Clear",IDC_CLEAR,7,83,70,14         //  450,63,50,14
+    PUSHBUTTON      "&Send Telegram",IDC_CLEAR,7,110,70,14         //  450,63,50,14
+    LTEXT           "Sent Telegrams WCS -> PLC",IDC_STATIC,84,150,300,8     //x,y, width, heigth
+    LISTBOX         IDC_LIST,84,160,780,70,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Received Telegrams PLC -> WCS",IDC_STATIC,84,240,300,8     //x,y, width, heigth
+    LISTBOX         IDC_LIST,84,250,780,70,LBS_NOINTEGRALHEIGHT | LBS_EXTENDEDSEL | WS_VSCROLL | WS_TABSTOP
     //LTEXT           "Telegram was added",IDC_STATIC,7,441,66,8
     //CTEXT           "-",IDC_SHOWCOUNT,77,441,32,8
     //LTEXT           "times",IDC_STATIC,114,441,17,8

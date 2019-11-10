@@ -33,67 +33,66 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 	{
 		case WM_INITDIALOG:
 			// This is where we set up the dialog box, and initialise any default values
+			SendDlgItemMessage(hwnd, IDC_LIST, LB_ADDSTRING, 0, (LPARAM)CTM_DS_msg.client_msg_to_server[0]); // init listbox
+			SendDlgItemMessage(hwnd, IDC_LIST, LB_ADDSTRING, 0, (LPARAM)BSM_UC_msg.client_msg_to_server[0]); // init listbox
             
-
-			SetDlgItemText(hwnd, IDC_TEXT, CTM_DS_msg.client_msg_to_server[0]);
+			SetDlgItemText(hwnd, IDC_TEXT, "Add your Telegrams here");
 			SetDlgItemInt(hwnd, IDC_NUMBER, NUM_MSGS, FALSE);
 		break;
+		
 		case WM_COMMAND:
 			switch(LOWORD(wParam))
 			{
+
+				// Button: Add Messages
 				case IDC_ADD:
 				{
 					// When somebody clicks the Add button, first we get the number of
 					// they entered
-
-					BOOL bSuccess;
-					int nTimes = GetDlgItemInt(hwnd, IDC_NUMBER, &bSuccess, FALSE);
-					if(bSuccess) 
+					// int nTimes = GetDlgItemInt(hwnd, IDC_NUMBER, &bSuccess, FALSE);
+					
+					// Then we get the string they entered
+					// First we need to find out how long it is so that we can
+					// allocate some memory
+					int nTimes = 1;
+					int len = GetWindowTextLength(GetDlgItem(hwnd, IDC_TEXT));
+					if(len > 0)
 					{
-						// Then we get the string they entered
-						// First we need to find out how long it is so that we can
-						// allocate some memory
+						// Now we allocate, and get the string into our buffer
 
-						int len = GetWindowTextLength(GetDlgItem(hwnd, IDC_TEXT));
-						if(len > 0)
+						int i;
+						char* buf;
+
+						buf = (char*)GlobalAlloc(GPTR, len + 1);
+						GetDlgItemText(hwnd, IDC_TEXT, buf, len + 1);
+
+						// Now we add the string to the list box however many times
+						// the user asked us to.
+
+						for(i = 0;i < nTimes; i++)
 						{
-							// Now we allocate, and get the string into our buffer
+							int index = SendDlgItemMessage(hwnd, IDC_LIST, LB_ADDSTRING, 0, (LPARAM)buf);
 
-							int i;
-							char* buf;
-
-							buf = (char*)GlobalAlloc(GPTR, len + 1);
-							GetDlgItemText(hwnd, IDC_TEXT, buf, len + 1);
-
-							// Now we add the string to the list box however many times
-							// the user asked us to.
-
-							for(i = 0;i < nTimes; i++)
-							{
-								int index = SendDlgItemMessage(hwnd, IDC_LIST, LB_ADDSTRING, 0, (LPARAM)buf);
-
-								// Here we are associating the value nTimes with the item 
-								// just for the heck of it, we'll use it to display later.
-								// Normally you would put some more useful data here, such
-								// as a pointer.
-								SendDlgItemMessage(hwnd, IDC_LIST, LB_SETITEMDATA, (WPARAM)index, (LPARAM)nTimes);
-							}
-
-							// Dont' forget to free the memory!
-							GlobalFree((HANDLE)buf);
+							// Here we are associating the value nTimes with the item 
+							// just for the heck of it, we'll use it to display later.
+							// Normally you would put some more useful data here, such
+							// as a pointer.
+							SendDlgItemMessage(hwnd, IDC_LIST, LB_SETITEMDATA, (WPARAM)index, (LPARAM)nTimes);
 						}
-						else 
-						{
-							MessageBox(hwnd, "You didn't enter anything!", "Warning", MB_OK);
-						}
+
+						// Dont' forget to free the memory!
+						GlobalFree((HANDLE)buf);
 					}
 					else 
 					{
-						MessageBox(hwnd, "Couldn't translate that number :(", "Warning", MB_OK);
+						MessageBox(hwnd, "You didn't enter anything!", "Warning", MB_OK);
 					}
-
+					
 				}
 				break;
+
+
+
 				case IDC_REMOVE:
 				{
 					// When the user clicks the Remove button, we first get the number
@@ -137,9 +136,11 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 					}
 				}
 				break;
+				// Button: Clear all messages
 				case IDC_CLEAR:
 					SendDlgItemMessage(hwnd, IDC_LIST, LB_RESETCONTENT, 0, 0);
 				break;
+
 				case IDC_LIST:
 					switch(HIWORD(wParam))
 					{
@@ -192,6 +193,7 @@ BOOL CALLBACK DlgProc(HWND hwnd, UINT Message, WPARAM wParam, LPARAM lParam)
 				break;
 			}
 		break;
+
 		case WM_CLOSE:
 			EndDialog(hwnd, 0);
 		break;
